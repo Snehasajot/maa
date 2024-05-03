@@ -1,0 +1,39 @@
+#include <reg51.h>
+
+void delay(unsigned int time) {
+    int i;
+    for(i = 0; i < time; i++);
+}
+
+void main() {
+    int j;
+    // Starting with the MSB (most significant bit) set
+    
+    while(1) {
+        for(j = 0; j < 9; j++) {
+            P0 = 0x80>> j; // Right shift the number to display 1 to 9
+            delay(50000);
+        }
+    }
+}
+
+
+
+#include <reg51.h>
+void delay(unsigned int time){
+int i;
+for(i=0;i<time;i++);
+}
+void main(){
+while(1){
+P1=0XFF;
+delay(10000);
+P1=~P0;
+delay(10000);
+}
+}
+
+
+
+
+
