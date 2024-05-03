@@ -1,0 +1,41 @@
+#include <reg51.h> // Includes the register definitions for the 8051 microcontroller.
+
+sbit SEL_A = P1^0; // Defines a selection pin A for the ADC on pin 0 of port 1.
+sbit SEL_B = P1^1; // Defines a selection pin B for the ADC on pin 1 of port 1.
+sbit SEL_C = P1^2; // Defines a selection pin C for the ADC on pin 2 of port 1.
+sbit ALE = P1^3;   // Address Latch Enable pin, used to latch the address on the ADC.
+sbit START = P1^4; // Start conversion pin for the ADC.
+sbit EOC = P1^5;   // End Of Conversion pin, indicates when ADC conversion is complete.
+sbit OE = P1^6;    // Output Enable pin, used to enable the output of ADC data.
+
+void delay(unsigned int time) // A delay function.
+{
+	int i, j;
+	for (i = 0; i < 100; i++) // Loop for 100 iterations.
+		for (j = 0; j < time; j++); // Nested loop for the specified time.
+}
+
+void ADC_read() // Function to read from the ADC.
+{
+	SEL_A = 1; // Set the selection pin A high.
+	SEL_B = SEL_C = 1; // Set selection pins B and C high.
+	ALE = 1; // Set ALE high to latch the address.
+	START = 1; // Start the conversion by setting START high.
+	ALE = 0; // Bring ALE low.
+	START = 0; // Bring START low.
+	while (EOC == 1) // Check if End Of Conversion pin is high (waiting for conversion to complete).
+		OE = 1; // Set OE high to enable the output of the ADC data.
+}
+
+void main() // Main function where the program execution starts.
+{
+	ALE = 0; // Initialize the control pins (ALE, START, OE) to 0.
+	START = 0;
+	OE = 0;
+	while (1) // Infinite loop to continuously read ADC data.
+	{
+		ADC_read(); // Call the ADC_read function.
+		P0 = P2; // Transfer the ADC data to port 0.
+		delay(100); // Delay to allow for the ADC to process and for debouncing.
+	}
+}
