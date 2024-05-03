@@ -1,0 +1,42 @@
+#include <reg51.h>
+void main()
+{
+	unsigned char i=0,serial_data;
+	TMOD=0x20;
+	TH1=0xFA;
+	SCON=0x50;
+	TR1=1;
+	while(1)
+	{
+		while(!RI);
+			{
+				serial_data=SBUF;
+				RI=0;
+				SBUF=serial_data;
+				while(TI==0);
+				TI=0;
+			}
+		}
+		
+	}
+
+
+
+
+		
+#include<reg51.h> 
+void main(void){ 
+ unsigned char i=0,s[20]="Sneha"; 
+ TMOD=0x20;// timer 1 8 bit autoreload 
+ TH1=0xF4;// baud rate 2400 
+ SCON=0x50;//01010000=1: serial port mode specifier 
+ TR1=1;// timer start 
+ while(1){ 
+ while(s[i]!='\0'){ 
+ SBUF=s[i]; 
+ while(TI==0);// TI=transmit interrrupt 
+ TI=0; 
+ i++; 
+ } 
+ } 
+} 
